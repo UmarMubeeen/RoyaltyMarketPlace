@@ -33,7 +33,7 @@ contract NftMarket is ReentrancyGuard{
     mapping(uint => nftItem) public nftItems;
 
     Counters.Counter private idCounter;
-    uint public saleBasePrice;                 ///optional can be removed
+    uint public saleBasePrice;                 ///optional:  can be removed
     uint internal saleComissionPercent;
     address public owner;
     uint public discountTime;

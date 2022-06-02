@@ -46,7 +46,7 @@ contract RoyaltyToken721 is ERC721URIStorage,ERC2981, Ownable {
         _setTokenURI(tokenId, URI);
 
         ///@dev setting up royalty for creator
-        
+
          _setTokenRoyalty(tokenId, owner(), royaltyRate);
     }
 

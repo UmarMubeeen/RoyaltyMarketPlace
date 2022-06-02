@@ -28,9 +28,7 @@ contract RoyaltyToken721 is ERC721URIStorage,ERC2981, Ownable {
         tokenPrice = _tokenPrice;
         royaltyRate= _royaltyRate;
     }
-     ////@note also possible to pass URI as argument;
-     ////@note let buyer decide royalty rate.
-
+     ////@note;
     function mintToken() external payable{
         
         require(msg.sender != address(0), "Invalid address(0)");    // canot mint to address 0

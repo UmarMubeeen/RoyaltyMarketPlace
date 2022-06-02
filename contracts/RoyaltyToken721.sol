@@ -18,18 +18,18 @@ contract RoyaltyToken721 is ERC721URIStorage,ERC2981, Ownable {
     uint public maxSupply;
     string private URI;
     uint public tokenPrice;
+    uint96 internal royaltyRate;
 
-    constructor(uint _maxSupply, string memory _URI, uint _tokenPrice) ERC721("RoyalityToken721", "Royal21"){
+    constructor(uint _maxSupply, string memory _URI, uint _tokenPrice, uint96 _royaltyRate) ERC721("RoyalityToken721", "Royal21"){
 
         require(owner() != address(0), "owner cannot be address(0)" );
         maxSupply = _maxSupply;
         URI = _URI;
         tokenPrice = _tokenPrice;
+        royaltyRate =_royaltyRate;
     }
      ////@note also possible to pass URI as argument;
-     ////@note let buyer decide royalty rate.
-
-    function mintToken(uint _royaltyRate) external payable{
+    function mintToken() external payable{
         
         require(msg.sender != address(0), "Invalid address(0)");    // canot mint to address 0
         require(msg.value == tokenPrice, "payment not equal to token price");
@@ -46,8 +46,7 @@ contract RoyaltyToken721 is ERC721URIStorage,ERC2981, Ownable {
         _setTokenURI(tokenId, URI);
 
         ///@dev setting up royalty for creator
-        uint96 _royaltyFee = uint96(_royaltyRate) * 100;
-         _setTokenRoyalty(tokenId, owner(), _royaltyFee);
+         _setTokenRoyalty(tokenId, owner(), royaltyRate);
     }
 
 

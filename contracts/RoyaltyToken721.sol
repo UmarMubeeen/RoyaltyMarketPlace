@@ -28,6 +28,8 @@ contract RoyaltyToken721 is ERC721URIStorage,ERC2981, Ownable {
         tokenPrice = _tokenPrice;
         royaltyRate= _royaltyRate;
     }
+
+    
      ////@note;
     function mintToken() external payable{
         

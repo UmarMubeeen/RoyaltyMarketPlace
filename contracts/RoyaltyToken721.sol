@@ -18,7 +18,7 @@ contract RoyaltyToken721 is ERC721URIStorage,ERC2981, Ownable {
     uint public maxSupply;
     string private URI;
     uint public tokenPrice;
-    uint96 private royaltyRate;
+    uint96 internal royaltyRate;
 
     constructor(uint _maxSupply, string memory _URI, uint _tokenPrice, uint96 _royaltyRate) ERC721("RoyalityToken721", "Royal21"){
 

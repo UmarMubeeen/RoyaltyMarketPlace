@@ -16,7 +16,7 @@ contract RoyaltyToken721 is ERC721URIStorage,ERC2981, Ownable {
     Counters.Counter private tokenIdCounter;
 
     uint public maxSupply;
-    string private URI;
+    string internal URI;
     uint public tokenPrice;
     uint96 internal royaltyRate;
 

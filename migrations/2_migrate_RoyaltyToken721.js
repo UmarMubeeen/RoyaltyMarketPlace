@@ -3,10 +3,11 @@ const NftMarket = artifacts.require("NftMarket");
 
 module.exports = async function (deployer) {
 
+  let _uri = "https://ipfs.io/ipfs/Qmasr86Ey2HbqcugxJAESHVSGdpNUtAyN87cVA4z9Jknt5/"; 
   ///@dev deployed token with required parameters
- await  deployer.deploy(RoyaltyToken721, 1000, "QmR9L46sbHbJDmyKoZezQVkdKT2w5oSwjop9JmiE8oapLe", web3.utils.toWei(".001"), 300);
+  await  deployer.deploy(RoyaltyToken721, 1000, _uri, web3.utils.toWei("0.001"), 500);
 
   const {timestamp} = await web3.eth.getBlock("latest");
   ///@dev deployed market contarct 
-  await deployer.deploy(NftMarket, web3.utils.toWei(".001"), 5, 600, 5);
-};
+  await deployer.deploy(NftMarket, web3.utils.toWei("0.001"), 5, 600, 5);
+}

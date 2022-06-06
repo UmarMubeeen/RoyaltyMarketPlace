@@ -16,9 +16,9 @@ contract NftMarket is ReentrancyGuard{
     using Counters for Counters.Counter;
 
     enum state{
-        avaialbale,
-        sold,
-        cancelled
+        AVAILABLE,
+        SOLD,
+        CANCELLED
     }
 
     struct nftItem{
@@ -90,7 +90,7 @@ contract NftMarket is ReentrancyGuard{
             _price,
             address(_tokenAddress),
             _tokenId,
-            state.avaialbale,
+            state.AVAILABLE,
             block.timestamp
         ); 
 
@@ -109,8 +109,11 @@ contract NftMarket is ReentrancyGuard{
         nftItem storage _nftItems = nftItems[_itemId];
 
         require(msg.sender != _nftItems.seller , "seller can not buy");
-        require(_nftItems.stateNow == state.avaialbale, "token not available");
+        require(_nftItems.stateNow == state.AVAILABLE, "token not available");
         require(msg.value == _nftItems.tokenPrice, "insufficien payment");
+
+        ///@dev set current status of token to sold
+        _nftItems.stateNow = state.SOLD;
 
         uint _marketCommission;
         uint _discountAmount; 
@@ -146,8 +149,6 @@ contract NftMarket is ReentrancyGuard{
         ///@dev transfer net sale amount after discount and commission to seller
         _nftItems.seller.transfer(_netSaleAmount);
 
-        ///@dev set current status of token to sold
-        _nftItems.stateNow = state.sold;
 
         ///@dev token transfered to buyer account from contract address
         IERC721(_nftItems.tokenAdress).transferFrom(address(this), msg.sender, _nftItems.tokenId);
@@ -171,9 +172,9 @@ contract NftMarket is ReentrancyGuard{
         nftItem memory _nftItem = nftItems[_itemId];
 
         require(msg.sender ==_nftItem.seller, "only seller can cancel listing");
-        require(_nftItem.stateNow == state.avaialbale, "current state should be available");
+        require(_nftItem.stateNow == state.AVAILABLE, "current state should be available");
 
-        _nftItem.stateNow = state.cancelled;
+        _nftItem.stateNow = state.CANCELLED;
 
         ///@dev transfer token back to seller from market account
         IERC721(_nftItem.tokenAdress).transferFrom(address(this), msg.sender, _itemId);
@@ -184,12 +185,7 @@ contract NftMarket is ReentrancyGuard{
 
     function getListOfOwners(uint _tokenId) public view returns(address[] memory owners) {
        
-        uint i=0;
-        while(i<= listOfOwners[_tokenId].length){
-            i++;
-            return listOfOwners[_tokenId];
-
-        }
+        return  listOfOwners[_tokenId];
     }
 
     function getListedItem(uint _itemid) public view returns(nftItem memory){
@@ -203,8 +199,7 @@ contract NftMarket is ReentrancyGuard{
 
     function _calculatePercent(uint _payment, uint _percent) internal pure returns(uint){
         
-        uint _percentageAmount = (_payment.mul(_percent)).div(100);
-        return _percentageAmount;
+        return (_payment.mul(_percent)).div(100);
         
     }
     function _getValues(uint _value, uint _setPercentage) internal pure returns(uint, uint ){

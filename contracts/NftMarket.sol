@@ -31,7 +31,8 @@ contract NftMarket is ReentrancyGuard{
         uint listTime;
     }
     mapping(uint => nftItem) public nftItems;
-
+    mapping (uint => address[])public listOfOwners;
+ 
     Counters.Counter private idCounter;
     uint public saleBasePrice;                 ///optional: can be removed
     uint internal saleComissionPercent;
@@ -151,6 +152,9 @@ contract NftMarket is ReentrancyGuard{
         ///@dev token transfered to buyer account from contract address
         IERC721(_nftItems.tokenAdress).transferFrom(address(this), msg.sender, _nftItems.tokenId);
 
+        ///@dev appending the array of buyers
+        listOfOwners[_nftItems.tokenId].push(msg.sender);
+
        emit itemSold(
             _itemId,
             address(_nftItems.tokenAdress),
@@ -177,6 +181,16 @@ contract NftMarket is ReentrancyGuard{
         emit listingCancelled(_itemId, msg.sender); 
     }
     
+
+    function getListOfOwners(uint _tokenId) public view returns(address[] memory owners) {
+       
+        uint i=0;
+        while(i<= listOfOwners[_tokenId].length){
+            i++;
+            return listOfOwners[_tokenId];
+
+        }
+    }
 
     function getListedItem(uint _itemid) public view returns(nftItem memory){
         return nftItems[_itemid];

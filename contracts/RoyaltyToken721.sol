@@ -5,12 +5,15 @@ pragma solidity >=0.4.22 <0.9.0;
 import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "../node_modules/@openzeppelin/contracts/token/common/ERC2981.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
+import "../node_modules/@openzeppelin/contracts/utils/Strings.sol";
 import "../node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 
 contract RoyaltyToken721 is ERC721URIStorage,ERC2981, Ownable {
     using SafeMath for uint ;
+    using Strings for uint256;
+
     using Counters for Counters.Counter;
 
     Counters.Counter private tokenIdCounter;
@@ -30,6 +33,15 @@ contract RoyaltyToken721 is ERC721URIStorage,ERC2981, Ownable {
     }
 
     
+      function _baseURI() internal view override returns (string memory) {
+        return URI;
+    }
+      function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+
+        string memory baseURI = _baseURI();
+        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenId.toString(),".jpg")) : "";
+    }
      ////@note;
     function mintToken() external payable{
         
@@ -45,7 +57,7 @@ contract RoyaltyToken721 is ERC721URIStorage,ERC2981, Ownable {
         _mint(msg.sender, tokenId);          //mint token to given address
 
         ///@dev setting up tokn uri
-        _setTokenURI(tokenId, URI);
+        // _setTokenURI(tokenId, URI);
 
         ///@dev setting up royalty for creator
 

@@ -32,16 +32,6 @@ contract RoyaltyToken721 is ERC721URIStorage,ERC2981, Ownable {
         royaltyRate= _royaltyRate;
     }
 
-    
-      function _baseURI() internal view override returns (string memory) {
-        return URI;
-    }
-      function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
-
-        string memory baseURI = _baseURI();
-        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenId.toString(),".jpg")) : "";
-    }
      ////@note;
     function mintToken() external payable{
         
@@ -57,16 +47,13 @@ contract RoyaltyToken721 is ERC721URIStorage,ERC2981, Ownable {
         _mint(msg.sender, tokenId);          //mint token to given address
 
         ///@dev setting up tokn uri
-        // _setTokenURI(tokenId, URI);
+        _setTokenURI(tokenId, URI);
 
         ///@dev setting up royalty for creator
 
          _setTokenRoyalty(tokenId, owner(), royaltyRate);
     }
 
-
-    
-   
 
 
 
